@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-void: #0a0a0c;
+  --color-ash: #1a1a1e;
+  --color-smoke: #2a2a30;
+  --color-dust: #8a8a8f;
+  --color-bone: #e8e6e3;
+  --color-ember: #ff6b35;
+  --color-rust: #c44536;
+  --color-ocean: #1e3a5f;
+  --color-moss: #2d4a3e;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-void text-bone antialiased;
+    font-family: 'Source Sans 3', sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    @apply font-semibold tracking-tight;
+  }
+
+  ::selection {
+    @apply bg-ember/30 text-bone;
+  }
+}
+
+@layer components {
+  .narration-text {
+    @apply text-3xl md:text-4xl lg:text-5xl font-display leading-tight;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .stat-card {
+    @apply bg-ash/80 backdrop-blur-md border border-smoke/50 rounded-lg p-4;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .citation-sup {
+    @apply text-ember cursor-pointer hover:text-rust transition-colors;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65em;
+    vertical-align: super;
+    margin-left: 2px;
+  }
+
+  .progress-dot {
+    @apply w-2 h-2 rounded-full transition-all duration-300;
+  }
+
+  .progress-dot.active {
+    @apply bg-ember scale-125;
+  }
+
+  .progress-dot.inactive {
+    @apply bg-smoke hover:bg-dust;
+  }
+
+  .drawer-overlay {
+    @apply fixed inset-0 bg-void/80 backdrop-blur-sm z-40;
+  }
+
+  .drawer-panel {
+    @apply fixed right-0 top-0 h-full w-full max-w-lg bg-ash border-l border-smoke z-50;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .source-card {
+    @apply bg-smoke/50 border border-smoke rounded-lg p-4 mb-4;
+  }
+
+  .source-card blockquote {
+    @apply text-dust italic border-l-2 border-ember pl-4 mt-3;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-fade-bottom {
+    background: linear-gradient(to bottom, transparent 0%, var(--color-void) 100%);
+  }
+
+  .gradient-fade-top {
+    background: linear-gradient(to top, transparent 0%, var(--color-void) 100%);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-void;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-smoke rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-dust;
+}
+
+/* Canvas container */
+.canvas-container {
+  @apply fixed inset-0 z-0;
+}
+
+/* Content overlay */
+.content-overlay {
+  @apply relative z-10 pointer-events-none;
+}
+
+.content-overlay > * {
+  @apply pointer-events-auto;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-ember;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  @apply absolute -top-10 left-4 bg-ember text-void px-4 py-2 rounded z-[100];
+  @apply focus:top-4 transition-all;
+}
+

@@ -1,0 +1,3 @@
+This directory is for static assets.
+Optional textures like shirt.png and fabricNoise.png can be added here.
+
