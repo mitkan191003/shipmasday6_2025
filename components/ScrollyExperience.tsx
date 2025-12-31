@@ -28,9 +28,21 @@ export default function ScrollyExperience() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [highlightedSource, setHighlightedSource] = useState<string | null>(null);
   const [isSnapping, setIsSnapping] = useState(false);
+  const [showMobileWarning, setShowMobileWarning] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const lastScrollTime = useRef(Date.now());
   const snapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Check for mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobile = window.innerWidth < 768;
+      setShowMobileWarning(isMobile);
+    };
+    
+    checkMobile();
+    // Don't add resize listener - only check on initial load
+  }, []);
 
   // Check for reduced motion preference
   useEffect(() => {
@@ -164,6 +176,62 @@ export default function ScrollyExperience() {
 
   return (
     <>
+      {/* Mobile Warning Modal */}
+      <AnimatePresence>
+        {showMobileWarning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-void/95 backdrop-blur-sm p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-ash border border-smoke rounded-xl p-8 max-w-sm text-center shadow-2xl"
+            >
+              {/* Warning Icon */}
+              <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-ember/20 flex items-center justify-center">
+                <svg
+                  className="w-8 h-8 text-ember"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+
+              <h2 className="font-display text-2xl text-bone mb-3">
+                Desktop Recommended
+              </h2>
+              
+              <p className="text-dust mb-6 leading-relaxed">
+                This interactive experience features 3D visuals and scroll-driven animations that are best viewed on a larger screen.
+              </p>
+
+              <button
+                onClick={() => setShowMobileWarning(false)}
+                className="w-full py-3 px-6 bg-ember hover:bg-rust text-bone font-medium rounded-lg transition-colors"
+              >
+                Continue Anyway
+              </button>
+              
+              <p className="text-dust/60 text-xs mt-4">
+                For the best experience, visit on a desktop or tablet.
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Skip link for accessibility */}
       <a href="#main-content" className="skip-link">
         Skip to content
