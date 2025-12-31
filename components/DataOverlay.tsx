@@ -136,17 +136,17 @@ export default function DataOverlay({
                 variants={cardVariants}
                 initial="hidden"
                 animate={isCardVisible ? 'visible' : 'hidden'}
-                className="stat-card pointer-events-auto max-w-xl w-[90vw] md:w-auto"
+                className="stat-card pointer-events-auto max-w-md w-[85vw] md:w-auto"
                 style={{
                   background: 'rgba(26, 26, 30, 0.92)',
                   backdropFilter: 'blur(16px)',
                   border: '1px solid rgba(255, 107, 53, 0.3)',
-                  boxShadow: '0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 107, 53, 0.1)',
-                  padding: '1.5rem 2rem',
-                  borderRadius: '12px',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 107, 53, 0.1)',
+                  padding: '1rem 1.25rem',
+                  borderRadius: '10px',
                 }}
               >
-                <p className="text-bone text-lg md:text-xl lg:text-2xl font-body leading-relaxed text-center">
+                <p className="text-bone text-sm md:text-base lg:text-lg font-body leading-relaxed text-center">
                   {card.text}
                   {card.sourceIds.map((sourceId) => {
                     const source = getSourceById(sourceId);

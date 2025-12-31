@@ -150,8 +150,10 @@ export default function ScrollyExperience() {
     
     const containerHeight = scrollContainer.offsetHeight;
     const scrollHeight = containerHeight - window.innerHeight;
-    // Navigate to just after scene start
-    const targetScroll = (targetScene.scroll.start + 0.01) * Math.max(scrollHeight, 1);
+    // Navigate to 30% into the scene so visual is centered and narration/stats are visible
+    const sceneRange = targetScene.scroll.end - targetScene.scroll.start;
+    const targetProgress = targetScene.scroll.start + (sceneRange * 0.3);
+    const targetScroll = targetProgress * Math.max(scrollHeight, 1);
     window.scrollTo({ top: targetScroll, behavior: reducedMotion ? 'auto' : 'smooth' });
   }, [reducedMotion]);
 
