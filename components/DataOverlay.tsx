@@ -76,7 +76,11 @@ export default function DataOverlay({
   };
 
   const containerVariants = reducedMotion
-    ? {}
+    ? {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
     : {
         hidden: { opacity: 0 },
         visible: {
@@ -90,7 +94,11 @@ export default function DataOverlay({
       };
 
   const cardVariants = reducedMotion
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.3 } } }
+    ? { 
+        hidden: { opacity: 0 }, 
+        visible: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
     : {
         hidden: { opacity: 0, scale: 0.95 },
         visible: {

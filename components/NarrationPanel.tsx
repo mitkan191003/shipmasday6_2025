@@ -21,7 +21,11 @@ export default function NarrationPanel({
   const progressPerLine = narrationWindow / (lineCount + 1);
 
   const containerVariants = reducedMotion
-    ? {}
+    ? {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
     : {
         hidden: { opacity: 0 },
         visible: {
@@ -35,7 +39,11 @@ export default function NarrationPanel({
       };
 
   const lineVariants = reducedMotion
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.3 } } }
+    ? { 
+        hidden: { opacity: 0 }, 
+        visible: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
     : {
         hidden: { opacity: 0, y: 25 },
         visible: {
@@ -51,7 +59,11 @@ export default function NarrationPanel({
       };
 
   const headlineVariants = reducedMotion
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.3 } } }
+    ? { 
+        hidden: { opacity: 0 }, 
+        visible: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
     : {
         hidden: { opacity: 0, scale: 0.97 },
         visible: {
