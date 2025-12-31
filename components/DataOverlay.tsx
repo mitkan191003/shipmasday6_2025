@@ -189,7 +189,7 @@ function getCitationNumber(sourceId: string): number {
     'S_TE_MMR_2023_POLY',
     'S_TE_MMR_2023_PER_CAPITA',
     'S_IUCN_2017_MICRO',
-    'S_JAMBECK_2015_OCEAN',
+    'S_BUSINESSWASTE_MICROPLASTIC',
     'S_UNEP_2021_METHANE',
     'S_MCKINSEY_GFA_2020_FOC',
     'S_WRAP_2024_LIFETIME',

@@ -136,13 +136,13 @@ export const SOURCES: Record<string, Source> = {
     quote: 'Close to two-thirds (63.1%)… first the laundry of synthetic textiles (34.8%).',
     note: "This 34.8% is for primary microplastics releases to oceans in the report's central scenario.",
   },
-  S_JAMBECK_2015_OCEAN: {
-    id: 'S_JAMBECK_2015_OCEAN',
-    org: 'Science (Jambeck et al.)',
-    title: 'Plastic waste inputs from land into the ocean',
-    year: '2015',
-    url: 'https://www.science.org/doi/10.1126/science.1260352',
-    quote: '4.8 to 12.7 million MT entering the ocean.',
+  S_BUSINESSWASTE_MICROPLASTIC: {
+    id: 'S_BUSINESSWASTE_MICROPLASTIC',
+    org: 'Business Waste',
+    title: 'Textile Waste Facts',
+    year: '2024',
+    url: 'https://businesswaste.com/waste-types/textile-waste/textile-waste-facts/',
+    quote: "Textile waste contributes 9% of microplastic pollution to the world's oceans.",
   },
   S_UNEP_2021_METHANE: {
     id: 'S_UNEP_2021_METHANE',
@@ -180,9 +180,7 @@ export const SCENES: Scene[] = [
     chapter: 'ONE WEAR',
     headline: 'A shirt. One wear. A bin.',
     narrationLines: [
-      'The story begins with a single shirt—bought fast, worn once, discarded quickly.',
-      'The end looks small: a closed lid, a quiet curb.',
-      'The scale is not small.',
+      'The story begins with a single shirt: bought fast, worn once, discarded quickly.',
     ],
     statCards: [
       {
@@ -219,7 +217,7 @@ export const SCENES: Scene[] = [
   {
     id: 'SC_01',
     chapter: 'COLLECTION',
-    headline: 'Compacted into the stream',
+    headline: 'Discarded and dumped',
     narrationLines: [
       'Discarded clothing enters the waste stream.',
       'A personal decision becomes industrial throughput.',
@@ -249,18 +247,12 @@ export const SCENES: Scene[] = [
     narrationLines: [
       'At the landfill, fabric becomes terrain.',
       'Time passes. The pile remains.',
-      'This is where fast turns into long.',
     ],
     statCards: [
       {
         id: 'stat_02_1',
         text: 'Of the total fibre input used for clothing, 87% is landfilled or incinerated.',
         sourceIds: ['S_EMF_TEXTILES_REPORT_87'],
-      },
-      {
-        id: 'stat_02_2',
-        text: 'Overall, one garbage truck of textiles is landfilled or incinerated every second.',
-        sourceIds: ['S_EMF_TEXTILES_REPORT_TRUCK'],
       },
     ],
     sources: [SOURCES.S_EMF_TEXTILES_REPORT_87, SOURCES.S_EMF_TEXTILES_REPORT_TRUCK],
@@ -277,10 +269,10 @@ export const SCENES: Scene[] = [
   {
     id: 'SC_03',
     chapter: 'RECYCLING',
-    headline: 'A loop that barely closes',
+    headline: 'A loop that doesn\'t close',
     narrationLines: [
       'Most clothing is not remade into clothing.',
-      'Material value leaks out of the system.',
+      'Raw material value is lost.',
     ],
     statCards: [
       {
@@ -295,18 +287,18 @@ export const SCENES: Scene[] = [
     visuals: { 
       key: 'labelsAndThreads',
       // model: '/models/threads.stl',
-      rotation: [0, 0, 0],           // Initial orientation [x, y, z] in radians
-      rotationAmplitude: [0.05, 0.05, 0], // Oscillation amplitude [x, y, z]
+      rotation: [0, 0, 1.9],           // Initial orientation [x, y, z] in radians
+      rotationAmplitude: [0.15, 0.05, 0], // Oscillation amplitude [x, y, z]
       scale: 1,                      // Size multiplier
     },
   },
   {
     id: 'SC_04',
     chapter: 'MATERIALS',
-    headline: 'The closet begins at extraction',
+    headline: 'The journey begins at extraction',
     narrationLines: [
-      'Zoom out far enough and the shirt turns back into its inputs.',
-      'More fiber per person. More synthetic share.',
+      'Look back far enough and the overproduction goes back to the start.',
+      'More fiber per person. More demand. More production.',
     ],
     statCards: [
       {
@@ -342,13 +334,13 @@ export const SCENES: Scene[] = [
     chapter: 'MICROFIBERS',
     headline: 'Pollution that slips through',
     narrationLines: [
-      'Synthetic fabrics shed fibers during laundry.',
-      'Those fibers move through wastewater pathways toward rivers and coasts.',
+      'Synthetic fabrics shed fibers during laundry. Those fibers move through wastewater pathways toward rivers and coasts.',
+      'The transportation of waste textiles also contributes to water pollution.',
     ],
     statCards: [
       {
         id: 'stat_05_1',
-        text: 'Close to two-thirds (63.1%)… first the laundry of synthetic textiles (34.8%).',
+        text: 'Close to two-thirds (63.1%) of the releases are due to… the laundry of synthetic textiles (34.8%)… the erosion of tyres while driving (28 3%).',
         sourceIds: ['S_IUCN_2017_MICRO'],
       },
     ],
@@ -369,16 +361,16 @@ export const SCENES: Scene[] = [
     headline: 'From a seam to the sea',
     narrationLines: [
       'Rivers connect closets to coastlines.',
-      'Micro becomes widespread; widespread becomes hard to reverse.',
+      'Micro becomes widespread, widespread becomes hard to reverse.',
     ],
     statCards: [
       {
         id: 'stat_06_1',
-        text: '4.8 to 12.7 million MT entering the ocean.',
-        sourceIds: ['S_JAMBECK_2015_OCEAN'],
+        text: "Textile waste contributes 9% of microplastic pollution to the world's oceans.",
+        sourceIds: ['S_BUSINESSWASTE_MICROPLASTIC'],
       },
     ],
-    sources: [SOURCES.S_JAMBECK_2015_OCEAN],
+    sources: [SOURCES.S_BUSINESSWASTE_MICROPLASTIC],
     scroll: { start: 0.58, end: 0.78 },
     camera: { pos: [0, 0, 5], lookAt: [0, 0, 0], fov: 50 },
     visuals: { 
