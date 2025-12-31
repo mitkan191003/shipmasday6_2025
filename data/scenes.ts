@@ -28,7 +28,29 @@ export type Scene = {
     lookAt: [number, number, number];
     fov?: number;
   };
-  visuals: { key: string };
+  visuals: { 
+    key: string;
+    model?: string; // Path to STL file in /public/models/
+    // Initial rotation in radians [x, y, z] - default [0, 0, 0]
+    rotation?: [number, number, number];
+    // Animation rotation amplitude [x, y, z] - default [0.05, 0.2, 0] (radians)
+    rotationAmplitude?: [number, number, number];
+    // Scale multiplier - default 1
+    scale?: number;
+  };
+  // Stats card placement configuration
+  statsPlacement?: {
+    // Position: 'top' | 'bottom' | 'center' - vertical position relative to visual
+    // Default: 'top' (above the visual)
+    vertical?: 'top' | 'bottom' | 'center';
+    // Horizontal: 'left' | 'right' | 'center' - horizontal alignment
+    // Default: 'center'
+    horizontal?: 'left' | 'right' | 'center';
+    // Vertical offset in viewport height percentage (e.g., -10 = 10vh higher)
+    offsetY?: number;
+    // Horizontal offset in viewport width percentage
+    offsetX?: number;
+  };
 };
 
 // SOURCES POOL
@@ -176,8 +198,23 @@ export const SCENES: Scene[] = [
     ],
     sources: [SOURCES.S_UNEP_2025_PR, SOURCES.S_UNEP_2025_PR_2000_2015],
     scroll: { start: 0, end: 0.09 },
-    camera: { pos: [0, 0.2, 3.5], lookAt: [0, 0, 0], fov: 50 },
-    visuals: { key: 'shirtToBin' },
+    camera: { pos: [0, 0, 5], lookAt: [0, 0, 0], fov: 50 },
+    visuals: { 
+      key: 'shirtToBin',
+      model: '/models/shirt.stl',
+      // Rotation in radians: [x, y, z] - adjust these values!
+      rotation: [-1.57, 0, 0],           // Initial orientation
+      rotationAmplitude: [0.05, 0.2, 0], // How much it oscillates on each axis
+      scale: 1,                      // Size multiplier
+    },
+    // Stats placement: 'top' | 'center' | 'bottom' vertical, 'left' | 'center' | 'right' horizontal
+    // offsetY/offsetX in vh/vw for fine-tuning
+    statsPlacement: {
+      vertical: 'top',
+      horizontal: 'center',
+      offsetY: -10,
+      offsetX: 0,
+    },
   },
   {
     id: 'SC_01',
@@ -196,8 +233,14 @@ export const SCENES: Scene[] = [
     ],
     sources: [SOURCES.S_UNEP_2025_STORY_TRUCK],
     scroll: { start: 0.09, end: 0.18 },
-    camera: { pos: [0, 0.5, 5], lookAt: [0, -0.5, 0], fov: 55 },
-    visuals: { key: 'binToTruck' },
+    camera: { pos: [0, 0, 5], lookAt: [0, 0, 0], fov: 50 },
+    visuals: { 
+      key: 'binToTruck',
+      model: '/models/bin.stl',
+      rotation: [-1.4, 0, 0.5],           // Initial orientation [x, y, z] in radians
+      rotationAmplitude: [0.05, 0.2, 0], // Oscillation amplitude [x, y, z]
+      scale: 1,                      // Size multiplier
+    },
   },
   {
     id: 'SC_02',
@@ -222,8 +265,14 @@ export const SCENES: Scene[] = [
     ],
     sources: [SOURCES.S_EMF_TEXTILES_REPORT_87, SOURCES.S_EMF_TEXTILES_REPORT_TRUCK],
     scroll: { start: 0.18, end: 0.28 },
-    camera: { pos: [0, 2, 10], lookAt: [0, 0, 0], fov: 60 },
-    visuals: { key: 'landfillZoom' },
+    camera: { pos: [0, 0, 5], lookAt: [0, 0, 0], fov: 50 },
+    visuals: { 
+      key: 'landfillZoom',
+      model: '/models/landfill.stl',
+      rotation: [-1.3, 0, 0.5],           // Initial orientation [x, y, z] in radians
+      rotationAmplitude: [0.05, 0.05, 0], // Oscillation amplitude [x, y, z]
+      scale: 2,                      // Size multiplier
+    },
   },
   {
     id: 'SC_03',
@@ -242,8 +291,14 @@ export const SCENES: Scene[] = [
     ],
     sources: [SOURCES.S_EMF_TEXTILES_REPORT_RECYCLE],
     scroll: { start: 0.28, end: 0.38 },
-    camera: { pos: [0, 4, 16], lookAt: [0, 0, 0], fov: 55 },
-    visuals: { key: 'labelsAndThreads' },
+    camera: { pos: [0, 0, 5], lookAt: [0, 0, 0], fov: 50 },
+    visuals: { 
+      key: 'labelsAndThreads',
+      // model: '/models/threads.stl',
+      rotation: [0, 0, 0],           // Initial orientation [x, y, z] in radians
+      rotationAmplitude: [0.05, 0.05, 0], // Oscillation amplitude [x, y, z]
+      scale: 1,                      // Size multiplier
+    },
   },
   {
     id: 'SC_04',
@@ -267,8 +322,20 @@ export const SCENES: Scene[] = [
     ],
     sources: [SOURCES.S_TE_MMR_2023_PER_CAPITA, SOURCES.S_TE_MMR_2023_POLY],
     scroll: { start: 0.38, end: 0.48 },
-    camera: { pos: [0, 6, 22], lookAt: [0, 0, 0], fov: 50 },
-    visuals: { key: 'fibersToPolymers' },
+    camera: { pos: [0, 0, 5], lookAt: [0, 0, 0], fov: 50 },
+    visuals: { 
+      key: 'fibersToPolymers',
+      model: '/models/fiber.stl',
+      rotation: [-1.54, 0, 0.3],           // Initial orientation [x, y, z] in radians
+      rotationAmplitude: [0.05, 0.2, 0], // Oscillation amplitude [x, y, z]
+      scale: 1,                      // Size multiplier
+    },
+    statsPlacement: {
+      vertical: 'top',
+      horizontal: 'center',
+      offsetY: -10,
+      offsetX: 0,
+    },
   },
   {
     id: 'SC_05',
@@ -287,8 +354,14 @@ export const SCENES: Scene[] = [
     ],
     sources: [SOURCES.S_IUCN_2017_MICRO],
     scroll: { start: 0.48, end: 0.58 },
-    camera: { pos: [0, 8, 32], lookAt: [0, 0, 0], fov: 55 },
-    visuals: { key: 'washParticles' },
+    camera: { pos: [0, 0, 5], lookAt: [0, 0, 0], fov: 50 },
+    visuals: { 
+      key: 'washParticles',
+      // model: '/models/washer.stl',
+      // rotation: [0, 0, 0],           // Initial orientation [x, y, z] in radians
+      // rotationAmplitude: [0.05, 0.2, 0], // Oscillation amplitude [x, y, z]
+      // scale: 1,                      // Size multiplier
+    },
   },
   {
     id: 'SC_06',
@@ -306,52 +379,18 @@ export const SCENES: Scene[] = [
       },
     ],
     sources: [SOURCES.S_JAMBECK_2015_OCEAN],
-    scroll: { start: 0.58, end: 0.68 },
-    camera: { pos: [0, 12, 45], lookAt: [0, 0, 0], fov: 60 },
-    visuals: { key: 'riverToGyre' },
+    scroll: { start: 0.58, end: 0.78 },
+    camera: { pos: [0, 0, 5], lookAt: [0, 0, 0], fov: 50 },
+    visuals: { 
+      key: 'riverToGyre',
+      model: '/models/ocean.stl',
+      rotation: [-1.4, 0, 0],           // Initial orientation [x, y, z] in radians
+      rotationAmplitude: [0.05, 0, 0], // Oscillation amplitude [x, y, z]
+      scale: 10,                      // Size multiplier
+    },
   },
   {
     id: 'SC_07',
-    chapter: 'EMISSIONS',
-    headline: 'The landfill exhales',
-    narrationLines: [
-      'Organic waste decomposes without oxygen.',
-      'Methane rises; impacts scale globally.',
-    ],
-    statCards: [
-      {
-        id: 'stat_07_1',
-        text: 'In the waste sector, landfills and wastewater make up about 20 per cent of emissions.',
-        sourceIds: ['S_UNEP_2021_METHANE'],
-      },
-    ],
-    sources: [SOURCES.S_UNEP_2021_METHANE],
-    scroll: { start: 0.68, end: 0.78 },
-    camera: { pos: [0, 22, 60], lookAt: [0, 0, 0], fov: 55 },
-    visuals: { key: 'methanePlumes' },
-  },
-  {
-    id: 'SC_08',
-    chapter: 'SYSTEM',
-    headline: 'Emissions embedded upstream',
-    narrationLines: [
-      'The story is larger than disposal.',
-      'Most emissions happen before the shirt is ever worn.',
-    ],
-    statCards: [
-      {
-        id: 'stat_08_1',
-        text: '2.1 billion tonnes of GHG emissions in 2018, equalling 4% of the global total.',
-        sourceIds: ['S_MCKINSEY_GFA_2020_FOC'],
-      },
-    ],
-    sources: [SOURCES.S_MCKINSEY_GFA_2020_FOC],
-    scroll: { start: 0.78, end: 0.88 },
-    camera: { pos: [0, 35, 90], lookAt: [0, 0, 0], fov: 50 },
-    visuals: { key: 'globalSystemOverlay' },
-  },
-  {
-    id: 'SC_09',
     chapter: 'CHANGE',
     headline: 'A longer life changes the math',
     narrationLines: [
@@ -366,9 +405,21 @@ export const SCENES: Scene[] = [
       },
     ],
     sources: [SOURCES.S_WRAP_2024_LIFETIME],
-    scroll: { start: 0.88, end: 0.98 },
-    camera: { pos: [0, 50, 120], lookAt: [0, 0, 0], fov: 45 },
-    visuals: { key: 'repairAndReuse' },
+    scroll: { start: 0.78, end: 0.99 },
+    camera: { pos: [0, 0, 5], lookAt: [0, 0, 0], fov: 50 },
+    visuals: { 
+      key: 'repairAndReuse',
+      // model: '/models/shirt-mended.stl',
+      // rotation: [0, 0, 0],           // Initial orientation [x, y, z] in radians
+      // rotationAmplitude: [0.05, 0.2, 0], // Oscillation amplitude [x, y, z]
+      // scale: 1,                      // Size multiplier
+    },
+    statsPlacement: {
+      vertical: 'top',
+      horizontal: 'center',
+      offsetY: 30,
+      offsetX: 0,
+    },
   },
 ];
 

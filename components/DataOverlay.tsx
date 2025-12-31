@@ -16,9 +16,64 @@ export default function DataOverlay({
   onCitationClick,
   reducedMotion,
 }: DataOverlayProps) {
-  // Determine which cards to show based on scene progress
-  const cardCount = scene.statCards.length;
-  const progressPerCard = 1 / (cardCount + 1);
+  // Get placement configuration with defaults
+  const placement = scene.statsPlacement || {};
+  const vertical = placement.vertical || 'top';
+  const horizontal = placement.horizontal || 'center';
+  const offsetY = placement.offsetY || 0;
+  const offsetX = placement.offsetX || 0;
+
+  // Calculate entry progress (15% to 30% of scene = entry animation)
+  // Delayed entry so previous scene stats are fully gone
+  const entryProgress = Math.min(1, Math.max(0, (sceneProgress - 0.15) / 0.15));
+  // Exit earlier (55% to 75%) so stats are gone before next scene starts
+  const exitProgress = Math.max(0, (sceneProgress - 0.55) / 0.2);
+  
+  // Combined visibility - only visible during middle portion of scene
+  const isVisible = sceneProgress >= 0.1 && exitProgress < 1;
+  
+  // Calculate entry/exit Y offset for scroll animation
+  const entryOffset = (1 - easeOutCubic(entryProgress)) * 100; // Start 100vh below
+  const exitOffset = easeInCubic(exitProgress) * -100; // Exit 100vh above
+  const yOffset = entryOffset + exitOffset + offsetY;
+  
+  // Calculate opacity
+  const entryOpacity = easeOutCubic(entryProgress);
+  const exitOpacity = 1 - easeInCubic(exitProgress);
+  const opacity = Math.min(entryOpacity, exitOpacity);
+
+  // Build position classes based on placement
+  const getPositionClasses = () => {
+    const classes: string[] = ['fixed', 'z-30', 'pointer-events-none'];
+    
+    // Vertical positioning
+    switch (vertical) {
+      case 'top':
+        classes.push('top-[15%]');
+        break;
+      case 'center':
+        classes.push('top-1/2', '-translate-y-1/2');
+        break;
+      case 'bottom':
+        classes.push('bottom-[25%]');
+        break;
+    }
+    
+    // Horizontal positioning
+    switch (horizontal) {
+      case 'left':
+        classes.push('left-8', 'md:left-12');
+        break;
+      case 'center':
+        classes.push('left-1/2', '-translate-x-1/2');
+        break;
+      case 'right':
+        classes.push('right-8', 'md:right-12');
+        break;
+    }
+    
+    return classes.join(' ');
+  };
 
   const containerVariants = reducedMotion
     ? {}
@@ -26,7 +81,7 @@ export default function DataOverlay({
         hidden: { opacity: 0 },
         visible: {
           opacity: 1,
-          transition: { staggerChildren: 0.25, delayChildren: 0.4 },
+          transition: { staggerChildren: 0.15, delayChildren: 0.1 },
         },
         exit: { 
           opacity: 0,
@@ -37,23 +92,31 @@ export default function DataOverlay({
   const cardVariants = reducedMotion
     ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.3 } } }
     : {
-        hidden: { opacity: 0, x: 40, scale: 0.96 },
+        hidden: { opacity: 0, scale: 0.95 },
         visible: {
           opacity: 1,
-          x: 0,
           scale: 1,
-          transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+          transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
         },
         exit: {
           opacity: 0,
-          x: 25,
           scale: 0.98,
           transition: { duration: 0.25 },
         },
       };
 
+  if (!isVisible) return null;
+
   return (
-    <div className="fixed right-0 bottom-0 w-full md:w-1/2 lg:w-2/5 p-6 md:p-8 z-20 pointer-events-none">
+    <div 
+      className={getPositionClasses()}
+      style={{
+        transform: `translateY(${yOffset}vh) ${horizontal === 'center' ? 'translateX(-50%)' : ''} ${vertical === 'center' ? 'translateY(-50%)' : ''}`,
+        opacity: opacity,
+        marginLeft: horizontal !== 'center' ? `${offsetX}vw` : undefined,
+        left: horizontal === 'center' ? `calc(50% + ${offsetX}vw)` : undefined,
+      }}
+    >
       <AnimatePresence mode="wait">
         <motion.div
           key={scene.id}
@@ -61,40 +124,41 @@ export default function DataOverlay({
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="space-y-4 flex flex-col items-end"
+          className={`space-y-4 flex flex-col ${horizontal === 'right' ? 'items-end' : horizontal === 'left' ? 'items-start' : 'items-center'}`}
         >
           {scene.statCards.map((card, index) => {
-            const cardStart = (index + 0.6) * progressPerCard;
-            const isVisible = sceneProgress >= cardStart;
+            const cardStart = (index + 0.3) * (0.5 / (scene.statCards.length + 1));
+            const isCardVisible = sceneProgress >= cardStart;
 
             return (
               <motion.div
                 key={card.id}
                 variants={cardVariants}
                 initial="hidden"
-                animate={isVisible ? 'visible' : 'hidden'}
-                className="stat-card max-w-sm pointer-events-auto"
+                animate={isCardVisible ? 'visible' : 'hidden'}
+                className="stat-card pointer-events-auto max-w-xl w-[90vw] md:w-auto"
                 style={{
-                  background: 'rgba(26, 26, 30, 0.85)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(42, 42, 48, 0.6)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+                  background: 'rgba(26, 26, 30, 0.92)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255, 107, 53, 0.3)',
+                  boxShadow: '0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 107, 53, 0.1)',
+                  padding: '1.5rem 2rem',
+                  borderRadius: '12px',
                 }}
               >
-                <p className="text-bone text-base md:text-lg font-body leading-relaxed">
+                <p className="text-bone text-lg md:text-xl lg:text-2xl font-body leading-relaxed text-center">
                   {card.text}
                   {card.sourceIds.map((sourceId) => {
                     const source = getSourceById(sourceId);
                     if (!source) return null;
 
-                    // Get citation number (order in ALL_SOURCES)
                     const citationNum = getCitationNumber(sourceId);
 
                     return (
                       <button
                         key={sourceId}
                         onClick={() => onCitationClick(sourceId)}
-                        className="citation-sup ml-0.5 font-mono"
+                        className="citation-sup ml-1 font-mono text-accent hover:text-orange-300 transition-colors"
                         aria-label={`View source ${citationNum}: ${source.org}`}
                         title={`${source.org}: ${source.title}`}
                       >
@@ -131,4 +195,13 @@ function getCitationNumber(sourceId: string): number {
     'S_WRAP_2024_LIFETIME',
   ];
   return sourceOrder.indexOf(sourceId) + 1;
+}
+
+// Easing functions
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+function easeInCubic(t: number): number {
+  return t * t * t;
 }

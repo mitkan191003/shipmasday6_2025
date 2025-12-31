@@ -45,9 +45,16 @@ export default function ScrollyExperience() {
   // Handle scroll with smooth progress calculation
   useEffect(() => {
     const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      // Add buffer at the end so last scenes are fully viewable
-      const adjustedProgress = Math.min(1, Math.max(0, window.scrollY / scrollHeight));
+      // Calculate scroll height based only on the scroll container, not including sources
+      const scrollContainer = scrollContainerRef.current;
+      if (!scrollContainer) return;
+      
+      const containerHeight = scrollContainer.offsetHeight;
+      const scrollHeight = containerHeight - window.innerHeight;
+      
+      // Calculate progress based only on scroll container, capped at 1.0
+      // This ensures sources only appear after all scenes are complete
+      const adjustedProgress = Math.min(1, Math.max(0, window.scrollY / Math.max(scrollHeight, 1)));
       
       // Smooth the progress value
       setScrollProgress(prev => {
@@ -79,7 +86,7 @@ export default function ScrollyExperience() {
           if (distToStart < 0.02 || distToEnd < 0.02) {
             // Near a boundary, snap to nearest scene center
             const targetProgress = adjustedProgress < sceneMiddle ? scene.scroll.start + 0.01 : scene.scroll.end - 0.01;
-            const targetScroll = targetProgress * scrollHeight;
+            const targetScroll = targetProgress * Math.max(scrollHeight, 1);
             
             if (Math.abs(window.scrollY - targetScroll) > 10) {
               setIsSnapping(true);
@@ -138,19 +145,20 @@ export default function ScrollyExperience() {
   // Handle scene navigation from progress dots
   const handleSceneClick = useCallback((index: number) => {
     const targetScene = SCENES[index];
-    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+    
+    const containerHeight = scrollContainer.offsetHeight;
+    const scrollHeight = containerHeight - window.innerHeight;
     // Navigate to just after scene start
-    const targetScroll = (targetScene.scroll.start + 0.01) * scrollHeight;
+    const targetScroll = (targetScene.scroll.start + 0.01) * Math.max(scrollHeight, 1);
     window.scrollTo({ top: targetScroll, behavior: reducedMotion ? 'auto' : 'smooth' });
   }, [reducedMotion]);
 
-  // Toggle reduced motion
-  const toggleReducedMotion = useCallback(() => {
-    setReducedMotion((prev) => !prev);
-  }, []);
 
   // Calculate total scroll height with buffer for last scenes
-  const totalScrollHeight = SCENES.length * SCROLL_MULTIPLIER + 100; // Extra 100vh buffer
+  // Increased buffer to ensure CHANGE scene is fully visible before sources appear
+  const totalScrollHeight = SCENES.length * SCROLL_MULTIPLIER + 200; // Extra 200vh buffer
 
   return (
     <>
@@ -214,42 +222,8 @@ export default function ScrollyExperience() {
         </h1>
       </div>
 
-      {/* Reduced Motion Toggle & Sources Button */}
-      <div className="fixed top-6 right-6 z-40 flex items-center gap-3">
-        <button
-          onClick={toggleReducedMotion}
-          className="flex items-center gap-2 px-3 py-2 bg-ash/90 backdrop-blur-sm rounded-lg text-sm text-dust hover:text-bone transition-colors border border-smoke/50"
-          aria-label={reducedMotion ? 'Enable animations' : 'Reduce motion'}
-          title={reducedMotion ? 'Enable animations' : 'Reduce motion'}
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            {reducedMotion ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            )}
-          </svg>
-          <span className="hidden sm:inline">
-            {reducedMotion ? 'Motion On' : 'Motion Off'}
-          </span>
-        </button>
-
-        {/* Sources button */}
+      {/* Sources Button */}
+      <div className="fixed top-6 right-6 z-40">
         <button
           onClick={() => setDrawerOpen(true)}
           className="flex items-center gap-2 px-3 py-2 bg-ash/90 backdrop-blur-sm rounded-lg text-sm text-dust hover:text-bone transition-colors border border-smoke/50"
@@ -325,7 +299,7 @@ function SourcesSection() {
           <SourcesList />
         </div>
         
-        {/* Footer */}
+        {/* Footer
         <div className="mt-16 pt-8 border-t border-smoke/50 text-center">
           <p className="text-dust text-sm">
             A documentary exploration of fast fashion&apos;s environmental impact.
@@ -333,7 +307,7 @@ function SourcesSection() {
           <p className="text-dust/60 text-xs mt-2">
             All statistics verified from cited sources.
           </p>
-        </div>
+        </div> */}
       </div>
     </section>
   );

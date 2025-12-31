@@ -15,8 +15,10 @@ export default function NarrationPanel({
   reducedMotion,
 }: NarrationPanelProps) {
   // Calculate which narration lines should be visible
+  // Compress narration to first 55% of scene, leaving buffer at end
   const lineCount = scene.narrationLines.length;
-  const progressPerLine = 1 / (lineCount + 1);
+  const narrationWindow = 0.55; // All lines appear within first 55%
+  const progressPerLine = narrationWindow / (lineCount + 1);
 
   const containerVariants = reducedMotion
     ? {}
